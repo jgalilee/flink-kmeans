@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="FlinkKMeans" basedir="." default="jar">
+	<property name="src.dir" value="src" />
+	<property name="classes.dir" value="classes" />
+	<property name="eclipseclasses.dir" value ="bin" />
+	<path id="flink-classpath">
+		<fileset dir="/usr/lib/apache/flink-yarn-0.6-incubating/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<target name="clean" description="Deletes all files in the classes directory.">
+		<delete dir="${classes.dir}" failonerror="false" />
+		<delete file="${ant.project.name}.jar" />
+	</target>
+	<target name="compile" description="Compile src directory into classes.">
+		<mkdir dir="${classes.dir}" />
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="flink-classpath" />
+	</target>
+	<target name="jar" description="Create jar with src folder structure." depends="compile">
+		<jar destfile="${ant.project.name}.jar" basedir="${classes.dir}">
+			<fileset dir="${classes.dir}" />
+			<fileset dir="${src.dir}" includes="**/*.java"/>
+			<manifest>
+				<attribute name="Main-Class" value="com.jgalilee.flink.kmeans.Driver"/>
+			</manifest>
+		</jar>
+	</target>
+</project>
